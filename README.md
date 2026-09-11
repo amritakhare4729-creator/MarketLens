@@ -2,33 +2,87 @@
 
 ## Indian Stock Market Analytics & Prediction Dashboard
 
-MarketLens is an end-to-end stock market analytics project focused on analyzing historical Indian stock market data, engineering technical indicators, evaluating machine-learning models, and presenting the results through an interactive Django dashboard.
+🌐 **Live Demo:** https://marketlens-krm1.onrender.com/
 
-The project analyzes 19 major Indian companies across 8 sectors using approximately five years of historical market data.
+🐙 **GitHub Repository:** https://github.com/amritakhare4729-creator/MarketLens
 
----
+MarketLens is an end-to-end stock market analytics project that analyzes historical Indian stock market data, engineers technical indicators, evaluates machine-learning models, and presents the results through an interactive Django dashboard.
 
-## Project Overview
+The project analyzes **19 major Indian companies across 8 sectors** using approximately five years of historical market data.
 
-MarketLens combines:
-
-- Historical stock market data collection
-- Data cleaning and verification
-- Exploratory Data Analysis (EDA)
-- Technical feature engineering
-- Advanced technical indicators
-- Stock and sector performance analysis
-- Machine-learning experiments
-- UP/DOWN movement classification
-- Next-day return prediction
-- Technical trading signals
-- Interactive Django dashboard
-
-The project is designed as a **data analytics and decision-support system**, rather than a guaranteed stock-price prediction system.
+> **Note:** MarketLens is designed as an analytics and decision-support system. Its machine-learning experiments do not provide reliable guaranteed next-day predictions.
 
 ---
 
-## Objectives
+## 📊 Project Highlights
+
+- 📈 Historical stock market analysis
+- 🏢 Analysis of 19 Indian companies
+- 🏦 Coverage across 8 market sectors
+- 🔍 Exploratory Data Analysis (EDA)
+- 🧮 Technical indicator engineering
+- 📊 Company and sector performance analysis
+- 🤖 Multiple machine-learning experiments
+- 📉 Next-day return prediction
+- ⬆️⬇️ UP/DOWN movement classification
+- 💡 Rule-based technical market signals
+- 🌐 Interactive Django web dashboard
+- 🚀 Deployed online using Render
+
+---
+
+## 🌐 Live Dashboard
+
+### [🚀 Open MarketLens Live](https://marketlens-krm1.onrender.com/)
+
+The deployed dashboard contains four major sections:
+
+### 1. Dashboard
+
+Provides an overview of:
+
+- Market signals
+- Company trends
+- Signal distribution
+- Market statistics
+- Latest company prices
+
+### 2. Company Analysis
+
+Allows users to explore individual companies and view:
+
+- Technical signal
+- Trend
+- Signal strength
+- Historical price information
+- Technical indicators
+
+### 3. Sector Analysis
+
+Provides sector-level analysis across:
+
+- Automobile
+- Banking
+- Energy
+- FMCG
+- IT
+- Metals
+- Pharma
+- Telecom
+
+### 4. Prediction & Models
+
+Displays:
+
+- Regression model results
+- Classification results
+- Model comparison
+- Baseline comparison
+- Evaluation metrics
+
+---
+
+## 🎯 Objectives
 
 The main objectives of MarketLens are to:
 
@@ -36,39 +90,18 @@ The main objectives of MarketLens are to:
 2. Compare companies across different sectors.
 3. Identify trends and volatility patterns.
 4. Engineer meaningful technical indicators.
-5. Evaluate machine-learning approaches for short-term market prediction.
-6. Compare ML models against simple baselines.
-7. Present analytical insights through an interactive web dashboard.
+5. Evaluate machine-learning approaches for short-term market analysis.
+6. Compare machine-learning models against simple baselines.
+7. Generate technical market signals.
+8. Present analytical insights through an interactive web dashboard.
 
 ---
 
-## Dataset
+## 📁 Dataset
 
-The project contains historical data for 19 Indian companies.
+MarketLens analyzes historical data for **19 Indian companies**.
 
 ### Companies
-
-- Axis Bank
-- Bharti Airtel
-- Dr Reddy's
-- HCLTech
-- HDFC Bank
-- Hindustan Unilever
-- ICICI Bank
-- Infosys
-- ITC
-- M&M
-- Maruti Suzuki
-- NTPC
-- ONGC
-- Reliance
-- SBI
-- Sun Pharma
-- Tata Steel
-- TCS
-- Wipro
-
-### Sectors
 
 | Sector | Companies |
 |---|---|
@@ -91,9 +124,9 @@ The project contains historical data for 19 Indian companies.
 
 ---
 
-## Data Processing & Feature Engineering
+## 🧮 Feature Engineering
 
-The project includes multiple stages of feature engineering.
+MarketLens contains multiple stages of feature engineering.
 
 ### Basic Features
 
@@ -131,7 +164,7 @@ The project includes multiple stages of feature engineering.
 
 ---
 
-## Exploratory Data Analysis
+## 📊 Exploratory Data Analysis
 
 MarketLens performs company-level and sector-level analysis.
 
@@ -145,82 +178,79 @@ The analysis includes:
 - Moving-average analysis
 - Correlation analysis
 
-### Notable Historical Performance
+### Historical Performance Highlights
 
-Based on the analyzed period:
+During the analyzed period:
 
-- **M&M** recorded the strongest start-to-end price performance at approximately **+320%**.
-- **Wipro** recorded the weakest performance at approximately **-46%**.
-- Bharti Airtel and NTPC also showed strong positive performance.
-- Several IT companies experienced negative start-to-end price performance during the period.
+- **M&M:** approximately **+320%**
+- **Bharti Airtel:** approximately **+189%**
+- **NTPC:** approximately **+183%**
+- **Sun Pharma:** approximately **+143%**
+- **Wipro:** approximately **-46%**
+- **TCS:** approximately **-40%**
+- **Infosys:** approximately **-34%**
 
-These figures describe historical performance and should not be interpreted as future return expectations.
+M&M recorded the strongest start-to-end price performance, while Wipro recorded the weakest.
+
+These figures represent historical performance and should not be interpreted as future return expectations.
 
 ---
 
-## Machine Learning
+# 🤖 Machine Learning
 
-MarketLens evaluates multiple machine-learning approaches.
+MarketLens evaluates multiple machine-learning approaches for short-term market analysis.
 
-### 1. Random Forest Regression
+## 1. Random Forest — Next-Day Close Price
 
-The first regression model attempted to predict the next trading day's closing price.
-
-Performance:
+The initial regression model attempted to predict the next trading day's closing price.
 
 | Metric | Random Forest | Baseline |
 |---|---:|---:|
-| MAE | 36.7940 | 21.3812 |
-| RMSE | 120.1711 | 53.2567 |
-| R² | 0.9985 | 0.9997 |
+| MAE | 36.7940 | **21.3812** |
+| RMSE | 120.1711 | **53.2567** |
+| R² | 0.9985 | **0.9997** |
 
 The simple baseline performed better than the Random Forest model.
 
-This demonstrates why a high R² alone can be misleading for highly autocorrelated stock-price data.
+This demonstrates why a high R² alone can be misleading when predicting highly autocorrelated stock prices.
 
 ---
 
-### 2. Next-Day Return Prediction
+## 2. Random Forest — Next-Day Return
 
-A Random Forest model was then used to predict next-day percentage returns.
-
-Performance:
+The next model attempted to predict the next trading day's percentage return.
 
 | Metric | Random Forest | Baseline |
 |---|---:|---:|
-| MAE | 1.0998% | 1.0647% |
-| RMSE | 1.5423% | 1.4977% |
-| R² | -0.0610 | -0.0005 |
+| MAE | 1.0998% | **1.0647%** |
+| RMSE | 1.5423% | **1.4977%** |
+| R² | -0.0610 | **-0.0005** |
 
-The model did not outperform the baseline.
+The Random Forest model did not outperform the baseline.
 
 ---
 
-### 3. Improved Random Forest
+## 3. Improved Random Forest
 
 Additional technical indicators were introduced to improve the return prediction model.
 
-Performance:
-
 | Metric | Improved Random Forest | Baseline |
 |---|---:|---:|
-| MAE | 1.0788% | 1.0566% |
-| RMSE | 1.5115% | 1.4862% |
-| R² | -0.0348 | -0.0004 |
+| MAE | 1.0788% | **1.0566%** |
+| RMSE | 1.5115% | **1.4862%** |
+| R² | -0.0348 | **-0.0004** |
 | Directional Accuracy | 49.70% | — |
 
-The additional features improved the Random Forest slightly compared with the earlier return model, but it still did not outperform the baseline.
+The additional features slightly improved the Random Forest compared with the earlier return model, but the model still did not outperform the baseline.
 
 ---
 
-### 4. UP/DOWN Classification
+## 4. Random Forest Classification
 
 The project also treats next-day movement as a binary classification problem:
 
 - `1` = UP
 - `0` = DOWN
-
-#### Random Forest Classifier
 
 | Metric | Result |
 |---|---:|
@@ -230,11 +260,11 @@ The project also treats next-day movement as a binary classification problem:
 | F1 Score | 46.73% |
 | ROC-AUC | 0.4900 |
 
-Baseline accuracy was approximately 48.03%.
+Baseline accuracy was approximately **48.03%**.
 
 ---
 
-### 5. Gradient Boosting
+## 5. Gradient Boosting
 
 | Metric | Result |
 |---|---:|
@@ -246,7 +276,7 @@ Baseline accuracy was approximately 48.03%.
 
 ---
 
-### 6. Logistic Regression
+## 6. Logistic Regression
 
 | Metric | Result |
 |---|---:|
@@ -258,11 +288,11 @@ Baseline accuracy was approximately 48.03%.
 
 ---
 
-## Key Machine-Learning Finding
+## 🔎 Key Machine-Learning Finding
 
-The experiments show that the evaluated models do **not** provide a strong or reliable next-day predictive advantage over simple baselines.
+The experiments show that the evaluated models **do not provide a strong or reliable next-day predictive advantage over simple baselines**.
 
-This is an important result rather than a failure.
+This is an important analytical finding rather than a failure.
 
 Financial markets are noisy, non-stationary, and difficult to predict using historical technical indicators alone.
 
@@ -272,9 +302,9 @@ Therefore, MarketLens is positioned as an:
 
 ---
 
-## Technical Market Signals
+# 💡 Technical Market Signals
 
-MarketLens generates rule-based technical signals using indicators such as:
+MarketLens generates rule-based technical signals using:
 
 - Price vs 20-Day Moving Average
 - Price vs 50-Day Moving Average
@@ -285,9 +315,9 @@ MarketLens generates rule-based technical signals using indicators such as:
 
 Signals are categorized as:
 
-- BUY / POSITIVE
-- HOLD / NEUTRAL
-- SELL / NEGATIVE
+- 🟢 BUY / POSITIVE
+- 🟡 HOLD / NEUTRAL
+- 🔴 SELL / NEGATIVE
 
 Signal strength is categorized as:
 
@@ -300,67 +330,57 @@ The dashboard also identifies:
 - Bullish trends
 - Bearish trends
 - Mixed trends
-- Low, Moderate, and High volatility
+- Low volatility
+- Moderate volatility
+- High volatility
 
-These signals are analytical indicators and are not financial advice.
-
----
-
-## Dashboard
-
-MarketLens includes a Django-based web dashboard with four main sections:
-
-### Dashboard
-
-Provides an overview of:
-
-- Market signals
-- Company trends
-- Signal distribution
-- Market statistics
-
-### Company Analysis
-
-Allows users to inspect individual companies and view:
-
-- Current technical signal
-- Trend
-- Signal strength
-- Historical price information
-- Technical indicators
-
-### Sector Analysis
-
-Provides sector-level comparison across:
-
-- Automobile
-- Banking
-- Energy
-- FMCG
-- IT
-- Metals
-- Pharma
-- Telecom
-
-### Prediction & Models
-
-Displays:
-
-- Regression model results
-- Classification results
-- Model comparison
-- Baseline comparison
-- Model evaluation metrics
+These signals are analytical indicators and **are not financial advice**.
 
 ---
 
-## Project Structure
+# 🛠️ Tech Stack
+
+### Programming & Analysis
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib
+- yfinance
+
+### Web Development
+
+- Django
+- HTML
+- CSS
+
+### Database
+
+- SQLite
+
+### Deployment
+
+- Git
+- GitHub
+- Render
+- Gunicorn
+- WhiteNoise
+
+---
+
+# 📂 Project Structure
 
 ```text
 MarketLens/
 │
 ├── Dashboard/
 │   ├── migrations/
+│   ├── static/
+│   │   └── dashboard/
+│   │       ├── marketlens-favicon.svg
+│   │       ├── marketlens-icon.svg
+│   │       └── marketlens-logo.svg
 │   ├── templates/
 │   │   └── dashboard/
 │   │       ├── index.html
@@ -408,5 +428,6 @@ MarketLens/
 │
 ├── manage.py
 ├── requirements.txt
+├── build.sh
 ├── .gitignore
 └── README.md
