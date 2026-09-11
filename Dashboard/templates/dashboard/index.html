@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MarketLens | Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'dashboard/marketlens-favicon.svg' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #172033;
+        }
+
+        /* =========================================
+           HEADER
+           ========================================= */
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 24px 40px;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .header-content {
+            max-width: 1350px;
+            margin: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: bold;
+        }
+        .marketlens-logo {
+    width: 230px;
+    height: auto;
+    display: block;
+}
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 0.3px;
+        }
+
+        header p {
+            margin: 2px 0 0 54px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        /* =========================================================
+   NAVIGATION
+   VS CODE STYLE
+   ========================================================= */
+
+nav {
+    background: #010409;
+    border-bottom: 1px solid #30363d;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.nav-content {
+    max-width: 1350px;
+    min-height: 52px;
+    padding: 0 20px;
+    display: flex;
+    align-items: stretch;
+}
+
+nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    color: #8b949e;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    padding: 0 18px;
+    margin: 0;
+
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+nav a:hover {
+    color: #f0f6fc;
+    background: #161b22;
+    border-left-color: #21262d;
+    border-right-color: #21262d;
+}
+
+nav a.active {
+    color: #f0f6fc;
+    background: #161b22;
+
+    border-left-color: #30363d;
+    border-right-color: #30363d;
+    border-bottom: none;
+}
+
+/* Blue VS Code-style active indicator */
+
+nav a.active::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 3px;
+
+    background: #1f6feb;
+
+    box-shadow:
+        0 0 8px rgba(31, 111, 235, 0.55);
+}
+
+/* Small blue indicator on hover */
+
+nav a:hover::after {
+    content: "";
+
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 0;
+
+    height: 2px;
+
+    background: rgba(88, 166, 255, 0.55);
+}
+
+        nav a.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        /* =========================================
+           MAIN CONTAINER
+           ========================================= */
+
+        .container {
+            max-width: 1350px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            margin: 0 0 7px 0;
+            font-size: 29px;
+        }
+
+        .page-title p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* =========================================
+           KPI CARDS
+           ========================================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: #2563eb;
+        }
+
+        .card.buy::before {
+            background: #16a34a;
+        }
+
+        .card.hold::before {
+            background: #d97706;
+        }
+
+        .card.sell::before {
+            background: #dc2626;
+        }
+
+        .card.bullish::before {
+            background: #0f766e;
+        }
+
+        .card.bearish::before {
+            background: #7f1d1d;
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .card .value {
+            margin-top: 10px;
+            font-size: 30px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .card .small-text {
+            margin-top: 5px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        /* =========================================
+           MARKET OVERVIEW
+           ========================================= */
+
+        .overview {
+            background: white;
+            padding: 26px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 28px;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            margin: 0 0 6px 0;
+            font-size: 21px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .overview-box {
+            padding: 18px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+        }
+
+        .overview-box h3 {
+            margin: 0 0 9px 0;
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        .overview-box p {
+            margin: 0;
+            color: #6b7280;
+            line-height: 1.55;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           CHARTS
+           ========================================= */
+
+        .charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-card h2 {
+            margin: 0 0 4px 0;
+            font-size: 20px;
+        }
+
+        .chart-subtitle {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 320px;
+        }
+
+        /* =========================================
+           TREND SUMMARY
+           ========================================= */
+
+        .trend-section {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 28px;
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .trend-box {
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 11px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .trend-box h3 {
+            margin: 0 0 8px 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .trend-box .number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .trend-box.bullish {
+            border-left: 4px solid #0f766e;
+        }
+
+        .trend-box.mixed {
+            border-left: 4px solid #d97706;
+        }
+
+        .trend-box.bearish {
+            border-left: 4px solid #b91c1c;
+        }
+
+        /* =========================================
+           COMPANY TABLE
+           ========================================= */
+
+        .company-section {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 28px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .table-header span {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 13px;
+            border-bottom: 2px solid #e5e7eb;
+            color: #4b5563;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #edf0f3;
+            font-size: 13px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .company-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .company-link:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================================
+           SIGNAL BADGES
+           ========================================= */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-buy {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-hold {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-sell {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-neutral {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        /* =========================================
+           DISCLAIMER
+           ========================================= */
+
+        .disclaimer {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            padding: 18px;
+            border-radius: 11px;
+            color: #9a3412;
+            margin-bottom: 30px;
+            line-height: 1.55;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+
+        footer {
+            text-align: center;
+            padding: 28px;
+            color: #6b7280;
+            font-size: 13px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 1150px) {
+
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            header {
+                padding: 22px 20px;
+            }
+
+            header p {
+                margin-left: 0;
+            }
+
+            .nav-content {
+                overflow-x: auto;
+            }
+
+            nav a {
+                white-space: nowrap;
+                padding: 18px 13px;
+            }
+
+            .charts {
+                grid-template-columns: 1fr;
+            }
+
+            .trend-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin-top: 22px;
+                padding: 0 12px;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+        }
+/* =========================================================
+   MARKETLENS DARK THEME
+   VS CODE / DEVELOPER STYLE
+   ========================================================= */
+
+:root {
+    --bg-main: #0d1117;
+    --bg-header: #010409;
+    --bg-nav: #161b22;
+    --bg-card: #161b22;
+    --bg-card-alt: #0d1117;
+
+    --border: #30363d;
+    --border-light: #21262d;
+
+    --text-main: #f0f6fc;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+
+    --blue: #58a6ff;
+    --blue-dark: #1f6feb;
+    --blue-soft: rgba(88, 166, 255, 0.12);
+
+    --green: #3fb950;
+    --green-soft: rgba(63, 185, 80, 0.12);
+
+    --yellow: #d29922;
+    --yellow-soft: rgba(210, 153, 34, 0.12);
+
+    --red: #f85149;
+    --red-soft: rgba(248, 81, 73, 0.12);
+}
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+body {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(31, 111, 235, 0.08),
+            transparent 35%
+        ),
+        var(--bg-main);
+
+    color: var(--text-main);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header {
+    background:
+        linear-gradient(
+            135deg,
+            #010409 0%,
+            #0d1117 55%,
+            #111827 100%
+        );
+
+    border-bottom: 1px solid var(--border);
+    padding: 25px 40px;
+}
+
+header h1 {
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    font-size: 28px;
+}
+
+header p {
+    color: #8b949e;
+}
+
+.brand-icon {
+    background: #1f6feb;
+    border: 1px solid #388bfd;
+
+    box-shadow:
+        0 0 12px rgba(31, 111, 235, 0.30);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.brand-icon:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 18px rgba(31, 111, 235, 0.45);
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+nav {
+    background: #161b22;
+    border-bottom: 1px solid var(--border);
+}
+
+nav a {
+    color: #c9d1d9;
+    padding: 8px 4px;
+    transition: 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   PAGE TITLE
+   ========================================================= */
+
+.page-title h2 {
+    color: #f0f6fc;
+}
+
+.page-title p {
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   ALL MAIN CARDS / SECTIONS
+   ========================================================= */
+
+.card,
+.overview,
+.chart-card,
+.trend-section,
+.company-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+
+/* =========================================================
+   KPI CARDS
+   ========================================================= */
+
+/* =========================================================
+   KPI CARDS
+   PROFESSIONAL TERMINAL STYLE
+   ========================================================= */
+
+.card {
+    position: relative;
+    overflow: hidden;
+
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+
+    padding: 20px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Default blue accent */
+
+.card::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 3px;
+    height: 100%;
+
+    background: #1f6feb;
+}
+
+/* BUY */
+
+.card.buy::before {
+    background: #3fb950;
+}
+
+.card.buy:hover {
+    border-color: rgba(63, 185, 80, 0.55);
+}
+
+/* HOLD */
+
+.card.hold::before {
+    background: #d29922;
+}
+
+.card.hold:hover {
+    border-color: rgba(210, 153, 34, 0.55);
+}
+
+/* SELL */
+
+.card.sell::before {
+    background: #f85149;
+}
+
+.card.sell:hover {
+    border-color: rgba(248, 81, 73, 0.55);
+}
+
+/* BULLISH */
+
+.card.bullish::before {
+    background: #3fb950;
+}
+
+.card.bullish:hover {
+    border-color: rgba(63, 185, 80, 0.55);
+}
+
+/* BEARISH */
+
+.card.bearish::before {
+    background: #f85149;
+}
+
+.card.bearish:hover {
+    border-color: rgba(248, 81, 73, 0.55);
+}
+
+/* Hover */
+
+.card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* Card heading */
+
+.card h3 {
+    margin: 0;
+
+    color: #8b949e;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Main number */
+
+.card .value {
+    margin-top: 12px;
+
+    color: #f0f6fc;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+/* Supporting text */
+
+.card .small-text {
+    margin-top: 8px;
+
+    color: #6e7681;
+
+    font-size: 11px;
+}
+
+/* Colored KPI values */
+
+.card.buy .value,
+.card.bullish .value {
+    color: #3fb950;
+}
+
+.card.hold .value {
+    color: #d29922;
+}
+
+.card.sell .value,
+.card.bearish .value {
+    color: #f85149;
+}
+
+
+/* =========================================================
+   OVERVIEW
+   ========================================================= */
+
+.overview h2,
+.chart-card h2,
+.trend-section h2,
+.company-section h2 {
+    color: #f0f6fc;
+}
+
+.overview-text {
+    color: var(--text-secondary);
+}
+
+.overview-box,
+.trend-box {
+    background: #0d1117;
+    border: 1px solid var(--border);
+}
+
+.overview-box h3,
+.trend-box h3 {
+    color: #c9d1d9;
+}
+
+.overview-box p {
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   CHART CARDS
+   VS CODE ANALYTICS PANEL
+   ========================================================= */
+
+.chart-card {
+    background: #161b22;
+
+    border: 1px solid #30363d;
+    border-radius: 10px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+    border-color: #3b82f6;
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.30);
+}
+
+.chart-card h2 {
+    color: #f0f6fc;
+}
+
+.chart-subtitle {
+    color: #8b949e;
+}
+
+.chart-container {
+    background: #0d1117;
+
+    border: 1px solid #21262d;
+    border-radius: 8px;
+
+    padding: 14px;
+
+    margin-top: 12px;
+}
+/* =========================================================
+   CHART.JS DARK MODE
+   ========================================================= */
+
+.chart-card canvas {
+    max-width: 100%;
+}
+
+/* =========================================================
+   TREND SECTION
+   ========================================================= */
+
+/* =========================================================
+   TREND SECTION
+   VS CODE SUMMARY PANEL
+   ========================================================= */
+
+.trend-section {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.trend-box {
+    position: relative;
+    overflow: hidden;
+
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 9px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Bullish */
+
+.trend-box.bullish {
+    border-left: 3px solid #3fb950;
+}
+
+.trend-box.bullish:hover {
+    border-color: rgba(63, 185, 80, 0.55);
+    box-shadow: 0 8px 20px rgba(63, 185, 80, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Mixed */
+
+.trend-box.mixed {
+    border-left: 3px solid #d29922;
+}
+
+.trend-box.mixed:hover {
+    border-color: rgba(210, 153, 34, 0.55);
+    box-shadow: 0 8px 20px rgba(210, 153, 34, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Bearish */
+
+.trend-box.bearish {
+    border-left: 3px solid #f85149;
+}
+
+.trend-box.bearish:hover {
+    border-color: rgba(248, 81, 73, 0.55);
+    box-shadow: 0 8px 20px rgba(248, 81, 73, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Heading */
+
+.trend-box h3 {
+    color: #8b949e;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Number */
+
+.trend-box .number {
+    color: #f0f6fc;
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* Number colors */
+
+.trend-box.bullish .number {
+    color: #3fb950;
+}
+
+.trend-box.mixed .number {
+    color: #d29922;
+}
+
+.trend-box.bearish .number {
+    color: #f85149;
+}
+
+
+/* =========================================================
+   COMPANY TABLE
+   VS CODE / TERMINAL STYLE
+   ========================================================= */
+
+.company-section {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.table-header h2 {
+    color: #f0f6fc;
+}
+
+.table-header span {
+    color: #8b949e;
+}
+
+.table-wrapper {
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Table */
+
+table {
+    color: #c9d1d9;
+    background: #0d1117;
+}
+
+/* Header */
+
+th {
+    background: #161b22;
+    color: #8b949e;
+
+    border-bottom: 1px solid #30363d;
+
+    padding: 14px;
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 0.6px;
+}
+
+/* Table rows */
+
+td {
+    padding: 14px;
+
+    color: #c9d1d9;
+
+    border-bottom: 1px solid #21262d;
+}
+
+/* Row hover */
+
+tbody tr {
+    transition:
+        background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: #161b22;
+}
+
+/* Company link */
+
+.company-link {
+    color: #58a6ff;
+    text-decoration: none;
+    font-weight: 600;
+
+    transition:
+        color 0.15s ease;
+}
+
+.company-link:hover {
+    color: #79c0ff;
+    text-decoration: underline;
+}
+
+/* Price */
+
+td:nth-child(3) {
+    color: #f0f6fc;
+    font-weight: 600;
+}
+
+/* Signal badges */
+
+.badge {
+    border: 1px solid transparent;
+}
+
+/* BUY */
+
+.badge-buy {
+    background: rgba(63, 185, 80, 0.12);
+    color: #3fb950;
+    border-color: rgba(63, 185, 80, 0.30);
+}
+
+/* HOLD */
+
+.badge-hold {
+    background: rgba(210, 153, 34, 0.12);
+    color: #d29922;
+    border-color: rgba(210, 153, 34, 0.30);
+}
+
+/* SELL */
+
+.badge-sell {
+    background: rgba(248, 81, 73, 0.12);
+    color: #f85149;
+    border-color: rgba(248, 81, 73, 0.30);
+}
+
+/* Neutral / Mixed */
+
+.badge-neutral {
+    background: rgba(139, 148, 158, 0.10);
+    color: #8b949e;
+    border-color: #30363d;
+}
+
+/* =========================================================
+   SIGNAL COLORS
+   ========================================================= */
+
+.signal-buy {
+    color: var(--green);
+}
+
+.signal-hold {
+    color: #e3b341;
+}
+
+.signal-sell {
+    color: var(--red);
+}
+
+
+/* =========================================================
+   DISCLAIMER
+   VS CODE WARNING PANEL
+   ========================================================= */
+
+.disclaimer {
+    position: relative;
+
+    background: #161b22;
+
+    border: 1px solid rgba(210, 153, 34, 0.35);
+    border-left: 3px solid #d29922;
+
+    border-radius: 8px;
+
+    color: #c9d1d9;
+
+    padding: 18px 20px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.22);
+
+    line-height: 1.6;
+}
+
+.disclaimer strong {
+    color: #d29922;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background: #010409;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   VS CODE STYLE
+   ========================================================= */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #484f58;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 20px;
+    }
+
+    nav {
+        background: #161b22;
+    }
+
+    .card,
+    .overview,
+    .chart-card,
+    .trend-section,
+    .company-section {
+        box-shadow:
+            0 5px 18px rgba(0, 0, 0, 0.25);
+    }
+}
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+     ========================================= -->
+
+<header>
+
+    <div class="header-content">
+
+        <div class="brand">
+
+    <img
+        src="{% static 'dashboard/marketlens-logo.svg' %}"
+        alt="MarketLens"
+        class="marketlens-logo"
+    >
+
+</div>
+
+        <p>
+            Indian Stock Market Analytics & Decision Support System
+        </p>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     NAVIGATION
+     ========================================= -->
+
+<nav>
+
+    <div class="nav-content">
+
+        <a href="/" class="active">
+            Dashboard
+        </a>
+
+        <a href="/sectors/">
+            Sector Analysis
+        </a>
+
+        <a href="/prediction/">
+            Prediction & Models
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+
+    <!-- =========================================
+         PAGE TITLE
+         ========================================= -->
+
+    <div class="page-title">
+
+        <h2>
+            Market Dashboard
+        </h2>
+
+        <p>
+            Monitor current technical signals, market trends,
+            volatility and company-level conditions across
+            the MarketLens stock universe.
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         KPI CARDS
+         ========================================= -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <h3>
+                Total Companies
+            </h3>
+
+            <div class="value">
+                {{ total_companies }}
+            </div>
+
+            <div class="small-text">
+                Stocks tracked
+            </div>
+
+        </div>
+
+
+        <div class="card buy">
+
+            <h3>
+                BUY Signals
+            </h3>
+
+            <div class="value">
+                {{ buy_count }}
+            </div>
+
+            <div class="small-text">
+                Positive technical signal
+            </div>
+
+        </div>
+
+
+        <div class="card hold">
+
+            <h3>
+                HOLD Signals
+            </h3>
+
+            <div class="value">
+                {{ hold_count }}
+            </div>
+
+            <div class="small-text">
+                Neutral conditions
+            </div>
+
+        </div>
+
+
+        <div class="card sell">
+
+            <h3>
+                SELL Signals
+            </h3>
+
+            <div class="value">
+                {{ sell_count }}
+            </div>
+
+            <div class="small-text">
+                Negative technical signal
+            </div>
+
+        </div>
+
+
+        <div class="card bullish">
+
+            <h3>
+                Bullish Trend
+            </h3>
+
+            <div class="value">
+                {{ bullish_count }}
+            </div>
+
+            <div class="small-text">
+                Above key moving averages
+            </div>
+
+        </div>
+
+
+        <div class="card bearish">
+
+            <h3>
+                Bearish Trend
+            </h3>
+
+            <div class="value">
+                {{ bearish_count }}
+            </div>
+
+            <div class="small-text">
+                Below key moving averages
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         MARKET OVERVIEW
+         ========================================= -->
+
+    <div class="overview">
+
+        <div class="section-heading">
+
+            <h2>
+                Market Overview
+            </h2>
+
+            <p>
+                A quick summary of the current MarketLens analysis.
+            </p>
+
+        </div>
+
+
+        <div class="overview-grid">
+
+
+            <div class="overview-box">
+
+                <h3>
+                    Current Market Signals
+                </h3>
+
+                <p>
+                    {{ buy_count }} companies currently show
+                    BUY signals, {{ hold_count }} show HOLD signals
+                    and {{ sell_count }} show SELL signals.
+                </p>
+
+            </div>
+
+
+            <div class="overview-box">
+
+                <h3>
+                    Market Trend
+                </h3>
+
+                <p>
+                    {{ bullish_count }} companies have a bullish
+                    trend, {{ mixed_count }} have mixed conditions
+                    and {{ bearish_count }} have bearish conditions.
+                </p>
+
+            </div>
+
+
+            <div class="overview-box">
+
+                <h3>
+                    Technical Analysis
+                </h3>
+
+                <p>
+                    Technical signals use moving averages,
+                    RSI, MACD, momentum and recent price-return
+                    information.
+                </p>
+
+            </div>
+
+
+            <div class="overview-box">
+
+                <h3>
+                    Decision Support
+                </h3>
+
+                <p>
+                    MarketLens helps users compare stocks and
+                    understand market conditions using
+                    data-driven indicators.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CHARTS
+         ========================================= -->
+
+    <div class="charts">
+
+
+        <div class="chart-card">
+
+            <h2>
+                Market Signal Distribution
+            </h2>
+
+            <div class="chart-subtitle">
+                Current BUY, HOLD and SELL signals
+            </div>
+
+            <div class="chart-container">
+
+                <canvas id="signalChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <h2>
+                Market Trend Distribution
+            </h2>
+
+            <div class="chart-subtitle">
+                Current bullish, mixed and bearish trends
+            </div>
+
+            <div class="chart-container">
+
+                <canvas id="trendChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         TREND SUMMARY
+         ========================================= -->
+
+    <div class="trend-section">
+
+        <div class="section-heading">
+
+            <h2>
+                Market Trend Summary
+            </h2>
+
+            <p>
+                Distribution of current technical trends.
+            </p>
+
+        </div>
+
+
+        <div class="trend-grid">
+
+
+            <div class="trend-box bullish">
+
+                <h3>
+                    Bullish
+                </h3>
+
+                <div class="number">
+                    {{ bullish_count }}
+                </div>
+
+            </div>
+
+
+            <div class="trend-box mixed">
+
+                <h3>
+                    Mixed
+                </h3>
+
+                <div class="number">
+                    {{ mixed_count }}
+                </div>
+
+            </div>
+
+
+            <div class="trend-box bearish">
+
+                <h3>
+                    Bearish
+                </h3>
+
+                <div class="number">
+                    {{ bearish_count }}
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         COMPANY TABLE
+         ========================================= -->
+
+    <div class="company-section">
+
+
+        <div class="table-header">
+
+            <h2>
+                Company-wise Market Signals
+            </h2>
+
+            <span>
+                Click a company to view detailed analysis
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Company
+                        </th>
+
+                        <th>
+                            Ticker
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Signal
+                        </th>
+
+                        <th>
+                            Strength
+                        </th>
+
+                        <th>
+                            Trend
+                        </th>
+
+                        <th>
+                            Volatility
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for company in signals %}
+
+                    <tr>
+
+
+                        <td>
+
+                            <a
+                                class="company-link"
+                                href="/company/{{ company.Ticker }}/"
+                            >
+                                {{ company.Company }}
+                            </a>
+
+                        </td>
+
+
+                        <td>
+                            {{ company.Ticker }}
+                        </td>
+
+
+                        <td>
+                            ₹{{ company.Close|floatformat:2 }}
+                        </td>
+
+
+                        <td>
+
+                            {% if "BUY" in company.Technical_Signal %}
+
+                                <span class="badge badge-buy">
+                                    {{ company.Technical_Signal }}
+                                </span>
+
+                            {% elif "SELL" in company.Technical_Signal %}
+
+                                <span class="badge badge-sell">
+                                    {{ company.Technical_Signal }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-hold">
+                                    {{ company.Technical_Signal }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ company.Signal_Strength }}
+                        </td>
+
+
+                        <td>
+
+                            {% if company.Trend == "Bullish" %}
+
+                                <span class="badge badge-buy">
+                                    Bullish
+                                </span>
+
+                            {% elif company.Trend == "Bearish" %}
+
+                                <span class="badge badge-sell">
+                                    Bearish
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-neutral">
+                                    Mixed
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ company.Volatility_Level }}
+                        </td>
+
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7">
+                            No market data available.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         DISCLAIMER
+         ========================================= -->
+
+    <div class="disclaimer">
+
+        <strong>
+            Disclaimer:
+        </strong>
+
+        MarketLens is an analytical decision-support system.
+        Technical signals and machine-learning results are based
+        on historical market data and do not guarantee future stock
+        prices or investment returns. They should not be considered
+        financial advice.
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================
+     FOOTER
+     ========================================= -->
+
+<footer>
+
+    MarketLens &copy; 2026
+    |
+    Indian Stock Market Analytics & Decision Support System
+
+</footer>
+
+
+<!-- =========================================
+     CHARTS
+     ========================================= -->
+
+<script>
+
+
+    /* ==========================================
+       MARKET SIGNAL CHART
+       ========================================== */
+
+    const signalLabels = [
+        "BUY",
+        "HOLD",
+        "SELL"
+    ];
+
+
+    const signalValues = [
+
+        {{ buy_count|default:0 }},
+
+        {{ hold_count|default:0 }},
+
+        {{ sell_count|default:0 }}
+
+    ];
+
+
+    new Chart(
+
+        document.getElementById("signalChart"),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: signalLabels,
+
+                datasets: [
+
+                    {
+
+                        data: signalValues,
+
+                        borderWidth: 2
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "62%",
+
+                plugins: {
+
+    legend: {
+
+        position: "bottom",
+
+        labels: {
+
+            color: "#c9d1d9",
+
+            padding: 18,
+
+            font: {
+                size: 12
+            }
+
+        }
+
+    },
+
+    tooltip: {
+
+        backgroundColor: "#161b22",
+
+        titleColor: "#f0f6fc",
+
+        bodyColor: "#c9d1d9",
+
+        borderColor: "#30363d",
+
+        borderWidth: 1
+
+    }
+
+}
+
+            }
+
+        }
+
+    );
+
+
+    /* ==========================================
+       MARKET TREND CHART
+       ========================================== */
+
+    const trendLabels = [
+
+        "Bullish",
+        "Mixed",
+        "Bearish"
+
+    ];
+
+
+    const trendValues = [
+
+        {{ bullish_count|default:0 }},
+
+        {{ mixed_count|default:0 }},
+
+        {{ bearish_count|default:0 }}
+
+    ];
+
+
+    new Chart(
+
+        document.getElementById("trendChart"),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels: trendLabels,
+
+                datasets: [
+
+                    {
+
+                        label: "Companies",
+
+                        data: trendValues,
+
+                        borderWidth: 1,
+
+                        borderRadius: 6
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+x: {
+
+    ticks: {
+
+        color: "#8b949e",
+
+        font: {
+            size: 12
+        }
+
+    },
+
+    grid: {
+
+        display: false
+
+    },
+
+    border: {
+
+        color: "#30363d"
+
+    }
+
+},
+                    y: {
+
+    beginAtZero: true,
+
+    ticks: {
+
+        stepSize: 1,
+
+        color: "#8b949e",
+
+        font: {
+            size: 11
+        }
+
+    },
+
+    grid: {
+
+        color: "rgba(139, 148, 158, 0.12)"
+
+    },
+
+    border: {
+
+        color: "#30363d"
+
+    }
+
+}
+
+                },
+
+                plugins: {
+
+    legend: {
+
+        display: false
+
+    },
+
+    tooltip: {
+
+        backgroundColor: "#161b22",
+
+        titleColor: "#f0f6fc",
+
+        bodyColor: "#c9d1d9",
+
+        borderColor: "#30363d",
+
+        borderWidth: 1
+
+    }
+
+}
+
+            }
+
+        }
+
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
